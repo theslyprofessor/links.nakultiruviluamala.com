@@ -1,0 +1,298 @@
+---
+import data from '../data/links.json';
+
+const { profile, categories } = data;
+
+// Brand accent colors — tick beside each label + hover edge.
+const BRAND_ACCENTS = {
+  youtube:    '#ff0000',
+  soundcloud: '#ff5500',
+  instagram:  '#e1306c',
+  spotify:    '#1db954',
+  applemusic: '#fa243c',
+  bandcamp:   '#629aa9',
+  tiktok:     '#010101',
+  twitter:    '#1da1f2',
+  facebook:   '#1877f2',
+  patreon:    '#f96854',
+  linkedin:   '#0a66c2',
+  website:    '#8a8578',
+  default:    '#8a8578',
+};
+
+// PostHog public (phc_) project key — client-safe, visible in page source by design.
+// Override at build with PUBLIC_POSTHOG_KEY; set to '' to disable tracking.
+const POSTHOG_KEY = import.meta.env.PUBLIC_POSTHOG_KEY ?? 'phc_qgoLdK3kMnSGtzsNaoN9NgnRXotfoYjytCjGk3Nd2b3j';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{profile.name} — Links</title>
+    <meta name="description" content={`${profile.name} — ${profile.tagline}`} />
+
+    <!-- Open Graph / social preview -->
+    <meta property="og:title" content={`${profile.name} — Links`} />
+    <meta property="og:description" content={profile.tagline} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://links.nakultiruviluamala.com/variant-hybrid" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        color-scheme: light dark;
+        --paper: #faf9f6;
+        --card: #ffffff;
+        --ink: #1c1b18;
+        --muted: #6f6b61;
+        --hairline: rgba(28, 27, 24, 0.14);
+        --card-border: rgba(28, 27, 24, 0.16);
+        --card-border-hover: rgba(28, 27, 24, 0.42);
+        --card-shadow: 0 1px 2px rgba(28, 27, 24, 0.05);
+        --card-shadow-hover: 0 4px 14px rgba(28, 27, 24, 0.10);
+        --hover-ink: #000000;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #14130f;
+          --card: #1c1b16;
+          --ink: #ece9e2;
+          --muted: #9b968a;
+          --hairline: rgba(236, 233, 226, 0.16);
+          --card-border: rgba(236, 233, 226, 0.18);
+          --card-border-hover: rgba(236, 233, 226, 0.5);
+          --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+          --card-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.45);
+          --hover-ink: #ffffff;
+        }
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 16px;
+        line-height: 1.55;
+        display: flex;
+        justify-content: center;
+        padding: clamp(48px, 9vh, 96px) 24px 96px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .page {
+        width: 100%;
+        max-width: 600px;
+      }
+
+      /* ---------- masthead ---------- */
+      header {
+        margin-bottom: clamp(36px, 7vh, 64px);
+        text-align: center;
+      }
+      .avatar {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto 20px;
+        filter: grayscale(18%);
+        background: var(--hairline);
+      }
+      h1 {
+        font-family: "Fraunces", Georgia, serif;
+        font-weight: 460;
+        font-size: clamp(1.9rem, 6vw, 2.5rem);
+        line-height: 1.08;
+        letter-spacing: -0.015em;
+        margin: 0 0 10px;
+      }
+      .tagline {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.85rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      /* ---------- sections ---------- */
+      h2 {
+        font-family: "Fraunces", Georgia, serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 1.05rem;
+        letter-spacing: 0.01em;
+        color: var(--muted);
+        margin: 40px 0 14px;
+        padding-top: 26px;
+        border-top: 1px solid var(--hairline);
+      }
+      section:first-of-type h2 {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+      }
+
+      /* ---------- link cards ---------- */
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .link {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-decoration: none;
+        color: inherit;
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        border-radius: 14px;
+        padding: 15px 18px;
+        box-shadow: var(--card-shadow);
+        transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+      }
+      .tick {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex: none;
+        opacity: 0.9;
+      }
+      .link-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .link-title {
+        display: block;
+        font-family: "Fraunces", Georgia, serif;
+        font-weight: 500;
+        font-size: 1.12rem;
+        line-height: 1.25;
+        letter-spacing: -0.005em;
+      }
+      .link-desc {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 0.86rem;
+        line-height: 1.45;
+      }
+      .arrow {
+        flex: none;
+        font-family: "Inter", sans-serif;
+        font-size: 0.9em;
+        color: var(--muted);
+        transition: color 0.16s ease, transform 0.16s ease;
+      }
+      .link:hover,
+      .link:focus-visible {
+        border-color: var(--card-border-hover);
+        box-shadow: var(--card-shadow-hover);
+        transform: translateY(-2px);
+      }
+      .link:hover .arrow,
+      .link:focus-visible .arrow {
+        color: var(--hover-ink);
+        transform: translate(2px, -1px);
+      }
+      .link:active {
+        transform: translateY(0);
+        box-shadow: var(--card-shadow);
+      }
+      .link:focus-visible {
+        outline: 2px solid var(--muted);
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .link, .arrow { transition: none; }
+        .link:hover, .link:focus-visible { transform: none; }
+      }
+
+      /* ---------- footer ---------- */
+      footer {
+        border-top: 1px solid var(--hairline);
+        margin-top: 56px;
+        padding-top: 20px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+        text-align: center;
+      }
+
+      @media (max-width: 420px) {
+        body { padding-left: 16px; padding-right: 16px; }
+        .link { padding: 14px 15px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <img class="avatar" src={profile.avatar} alt={profile.name} onerror="this.style.visibility='hidden'" />
+        <h1>{profile.name}</h1>
+        <p class="tagline">{profile.tagline}</p>
+      </header>
+
+      {categories.map((category) => (
+        <section>
+          <h2>{category.title}</h2>
+          <ul>
+            {category.links.map((link) => {
+              const accent = BRAND_ACCENTS[link.brand] ?? BRAND_ACCENTS.default;
+              return (
+                <li>
+                  <a
+                    class="link"
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-label={link.label}
+                  >
+                    <span class="tick" style={`background:${accent};`} aria-hidden="true"></span>
+                    <span class="link-text">
+                      <span class="link-title">{link.label}</span>
+                      <span class="link-desc">{link.description}</span>
+                    </span>
+                    <span class="arrow" aria-hidden="true">&#8599;</span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))}
+
+      <footer>
+        © {new Date().getFullYear()} {profile.name}
+      </footer>
+    </main>
+
+    {POSTHOG_KEY && (
+      <script is:inline define:vars={{ POSTHOG_KEY }}>
+        !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+        posthog.init(POSTHOG_KEY, { api_host: 'https://us.i.posthog.com' });
+        document.querySelectorAll('.link').forEach(function(el){
+          el.addEventListener('click', function(){
+            posthog.capture('link_click', { label: el.dataset.label, url: el.href });
+          });
+        });
+      </script>
+    )}
+  </body>
+</html>
