@@ -1,0 +1,268 @@
+---
+import data from '../data/links.json';
+
+const { profile, categories } = data;
+
+// Turn a category title into a shell-style path segment: "Projects & Platforms" -> "~/projects-and-platforms"
+const toPath = (title) =>
+  '~/' +
+  title
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+// PostHog public (phc_) project key — client-safe, visible in page source by design.
+// Override at build with PUBLIC_POSTHOG_KEY; set to '' to disable tracking.
+const POSTHOG_KEY = import.meta.env.PUBLIC_POSTHOG_KEY ?? 'phc_qgoLdK3kMnSGtzsNaoN9NgnRXotfoYjytCjGk3Nd2b3j';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{profile.name} — Links</title>
+    <meta name="description" content={`${profile.name} — ${profile.tagline}`} />
+
+    <!-- Open Graph / social preview -->
+    <meta property="og:title" content={`${profile.name} — Links`} />
+    <meta property="og:description" content={profile.tagline} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://links.nakultiruviluamala.com" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #101211;
+        --panel: #141715;
+        --edge: #232823;
+        --text: #d3dad2;
+        --dim: #6d7a6e;
+        --green: #58e389;
+        --green-soft: rgba(88, 227, 137, 0.09);
+        --amber: #e5b567;
+      }
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 15px;
+        line-height: 1.55;
+        background:
+          radial-gradient(1100px 500px at 50% -12%, #182019, transparent),
+          var(--bg);
+        color: var(--text);
+        display: flex;
+        justify-content: center;
+        padding: 44px 16px 88px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .term { width: 100%; max-width: 640px; }
+
+      /* ── header ───────────────────────────────────────────── */
+      .who {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding-bottom: 26px;
+        border-bottom: 1px solid var(--edge);
+        margin-bottom: 30px;
+      }
+      .avatar {
+        width: 76px;
+        height: 76px;
+        border-radius: 8px;
+        object-fit: cover;
+        background: var(--panel);
+        border: 1px solid var(--edge);
+        outline: 1px solid rgba(88, 227, 137, 0.25);
+        outline-offset: 3px;
+        flex-shrink: 0;
+      }
+      .id { min-width: 0; }
+      .prompt-line {
+        color: var(--dim);
+        font-size: 0.78rem;
+        margin: 0 0 4px;
+        letter-spacing: 0.02em;
+      }
+      .prompt-line .p { color: var(--green); }
+      h1 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin: 0 0 4px;
+        letter-spacing: -0.01em;
+        color: #f2f6f1;
+      }
+      .tagline {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--dim);
+        overflow-wrap: break-word;
+      }
+      .cursor {
+        display: inline-block;
+        width: 0.55em;
+        height: 1em;
+        margin-left: 4px;
+        vertical-align: text-bottom;
+        background: var(--green);
+        animation: blink 1.1s steps(1) infinite;
+      }
+      @keyframes blink { 50% { opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) {
+        .cursor { animation: none; }
+      }
+
+      /* ── sections ─────────────────────────────────────────── */
+      section { margin-bottom: 30px; }
+      .dir {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin: 0 0 10px;
+        font-size: 0.85rem;
+        font-weight: 500;
+      }
+      .dir .glyph { color: var(--green); font-weight: 700; }
+      .dir .path { color: var(--amber); }
+      .dir .cmd { color: var(--dim); font-weight: 400; }
+
+      .listing {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--edge);
+        border-radius: 8px;
+        background: var(--panel);
+        overflow: hidden;
+      }
+
+      /* ── link rows ────────────────────────────────────────── */
+      .link {
+        display: block;
+        text-decoration: none;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--edge);
+        transition: background 0.1s ease, border-color 0.1s ease;
+      }
+      .link:last-child { border-bottom: none; }
+      .entry {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        color: var(--text);
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+      .entry .arrow {
+        color: var(--dim);
+        transition: color 0.1s ease;
+        flex-shrink: 0;
+      }
+      .comment {
+        display: block;
+        margin-top: 2px;
+        color: var(--dim);
+        font-size: 0.78rem;
+        font-style: italic;
+      }
+      .comment::before { content: '# '; font-style: normal; }
+
+      .link:hover,
+      .link:focus-visible {
+        background: var(--green-soft);
+        outline: none;
+      }
+      .link:hover .entry,
+      .link:focus-visible .entry { color: var(--green); }
+      .link:hover .entry .arrow,
+      .link:focus-visible .entry .arrow { color: var(--green); }
+      .link:active { background: rgba(88, 227, 137, 0.16); }
+
+      /* ── footer ───────────────────────────────────────────── */
+      footer {
+        margin-top: 42px;
+        font-size: 0.72rem;
+        color: var(--dim);
+      }
+      footer .p { color: var(--green); }
+
+      @media (max-width: 420px) {
+        body { padding: 32px 12px 72px; font-size: 14px; }
+        .who { gap: 14px; }
+        .avatar { width: 64px; height: 64px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="term">
+      <header class="who">
+        <img
+          class="avatar"
+          src={profile.avatar}
+          alt={profile.name}
+          onerror="this.style.visibility='hidden'"
+        />
+        <div class="id">
+          <p class="prompt-line"><span class="p">❯</span> whoami</p>
+          <h1>{profile.name}</h1>
+          <p class="tagline">{profile.tagline}<span class="cursor" aria-hidden="true"></span></p>
+        </div>
+      </header>
+
+      {categories.map((category) => (
+        <section>
+          <h2 class="dir">
+            <span class="glyph">❯</span>
+            <span class="path">{toPath(category.title)}</span>
+            <span class="cmd">ls -la</span>
+          </h2>
+          <div class="listing">
+            {category.links.map((link) => (
+              <a
+                class="link"
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-label={link.label}
+              >
+                <span class="entry">
+                  <span class="arrow">→</span>
+                  {link.label}
+                </span>
+                <span class="comment">{link.description}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      ))}
+
+      <footer>
+        <span class="p">❯</span> © {new Date().getFullYear()} {profile.name} · exit 0
+      </footer>
+    </main>
+
+    {POSTHOG_KEY && (
+      <script is:inline define:vars={{ POSTHOG_KEY }}>
+        !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+        posthog.init(POSTHOG_KEY, { api_host: 'https://us.i.posthog.com' });
+        document.querySelectorAll('.link').forEach(function(el){
+          el.addEventListener('click', function(){
+            posthog.capture('link_click', { label: el.dataset.label, url: el.href });
+          });
+        });
+      </script>
+    )}
+  </body>
+</html>

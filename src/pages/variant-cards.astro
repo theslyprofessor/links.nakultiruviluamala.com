@@ -1,0 +1,292 @@
+---
+import data from '../data/links.json';
+
+const { profile, categories } = data;
+
+// Brand accent colors — drives the left edge + dot on each link card.
+// Add a platform = add a row here + in links.json.
+const BRANDS = {
+  youtube:    '#ff4d4d',
+  soundcloud: '#ff7a33',
+  instagram:  '#f065a5',
+  spotify:    '#1db954',
+  applemusic: '#fa4d5e',
+  bandcamp:   '#7ab8c7',
+  tiktok:     '#9ba0ff',
+  twitter:    '#4db5f5',
+  facebook:   '#5b93f5',
+  patreon:    '#f98a78',
+  linkedin:   '#5aa1e8',
+  website:    '#8b8ff0',
+  default:    '#8b8ff0',
+};
+
+// PostHog public (phc_) project key — client-safe, visible in page source by design.
+// Override at build with PUBLIC_POSTHOG_KEY; set to '' to disable tracking.
+const POSTHOG_KEY = import.meta.env.PUBLIC_POSTHOG_KEY ?? 'phc_qgoLdK3kMnSGtzsNaoN9NgnRXotfoYjytCjGk3Nd2b3j';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{profile.name} — Links</title>
+    <meta name="description" content={`${profile.name} — ${profile.tagline}`} />
+
+    <!-- Open Graph / social preview -->
+    <meta property="og:title" content={`${profile.name} — Links`} />
+    <meta property="og:description" content={profile.tagline} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://links.nakultiruviluamala.com" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        color: #f2f3f8;
+        background:
+          radial-gradient(900px 520px at 18% -8%, rgba(99, 91, 255, 0.32), transparent 62%),
+          radial-gradient(820px 560px at 92% 4%, rgba(236, 72, 153, 0.20), transparent 60%),
+          radial-gradient(1000px 700px at 50% 115%, rgba(34, 211, 238, 0.14), transparent 62%),
+          linear-gradient(180deg, #0b0b13 0%, #0e0d18 55%, #0a0a11 100%);
+        background-attachment: fixed;
+        display: flex;
+        justify-content: center;
+        padding: 52px 18px 72px;
+      }
+
+      .page { width: 100%; max-width: 620px; }
+
+      /* ---------- Header ---------- */
+      header { text-align: center; margin-bottom: 36px; }
+
+      .avatar {
+        width: 108px; height: 108px; border-radius: 50%;
+        object-fit: cover; margin: 0 auto 18px; display: block;
+        border: 2px solid rgba(255, 255, 255, 0.22);
+        box-shadow:
+          0 0 0 6px rgba(255, 255, 255, 0.05),
+          0 12px 36px rgba(0, 0, 0, 0.5);
+        background: #23233a;
+      }
+
+      h1 {
+        font-family: 'Sora', 'Inter', sans-serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0 0 8px;
+      }
+
+      .tagline {
+        margin: 0;
+        font-size: 0.95rem;
+        color: rgba(233, 234, 245, 0.72);
+        letter-spacing: 0.01em;
+      }
+
+      /* ---------- Category sections ---------- */
+      .category { margin-bottom: 30px; }
+
+      .category-title {
+        font-family: 'Sora', 'Inter', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: rgba(235, 236, 248, 0.62);
+        margin: 0 0 12px;
+        padding-left: 4px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .category-title::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.16), transparent);
+      }
+
+      .links { display: flex; flex-direction: column; gap: 12px; }
+
+      /* ---------- Glass link cards ---------- */
+      .link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 15px 18px 15px 20px;
+        border-radius: 16px;
+        text-decoration: none;
+        color: inherit;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28);
+        overflow: hidden;
+        transition:
+          transform 0.16s ease,
+          border-color 0.16s ease,
+          background 0.16s ease,
+          box-shadow 0.16s ease;
+      }
+
+      /* brand-colored left edge */
+      .link::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 4px;
+        background: var(--brand);
+        opacity: 0.9;
+        transition: width 0.16s ease;
+      }
+
+      .link:hover,
+      .link:focus-visible {
+        transform: translateY(-3px);
+        background: rgba(255, 255, 255, 0.09);
+        border-color: color-mix(in srgb, var(--brand) 45%, rgba(255, 255, 255, 0.2));
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.4),
+          0 0 22px color-mix(in srgb, var(--brand) 28%, transparent);
+      }
+
+      .link:hover::before,
+      .link:focus-visible::before { width: 6px; }
+
+      .link:active { transform: translateY(-1px); }
+
+      .link:focus-visible {
+        outline: 2px solid var(--brand);
+        outline-offset: 2px;
+      }
+
+      .dot {
+        flex-shrink: 0;
+        width: 11px; height: 11px;
+        border-radius: 50%;
+        background: var(--brand);
+        box-shadow: 0 0 10px color-mix(in srgb, var(--brand) 65%, transparent);
+      }
+
+      .link-text { min-width: 0; }
+
+      .link-label {
+        display: block;
+        font-weight: 600;
+        font-size: 1rem;
+        letter-spacing: -0.005em;
+        margin-bottom: 3px;
+        overflow-wrap: anywhere;
+      }
+
+      .link-desc {
+        display: block;
+        font-size: 0.845rem;
+        line-height: 1.42;
+        color: rgba(230, 231, 244, 0.74);
+      }
+
+      .arrow {
+        margin-left: auto;
+        flex-shrink: 0;
+        font-size: 1rem;
+        color: rgba(240, 240, 250, 0.45);
+        transition: transform 0.16s ease, color 0.16s ease;
+      }
+
+      .link:hover .arrow {
+        transform: translateX(3px);
+        color: var(--brand);
+      }
+
+      footer {
+        margin-top: 44px;
+        text-align: center;
+        font-size: 0.78rem;
+        color: rgba(235, 236, 248, 0.42);
+      }
+      footer a { color: inherit; }
+
+      @media (prefers-reduced-motion: reduce) {
+        .link, .link::before, .arrow { transition: none; }
+        .link:hover, .link:focus-visible { transform: none; }
+      }
+
+      @media (min-width: 640px) {
+        body { padding-top: 72px; }
+        h1 { font-size: 1.8rem; }
+        .link { padding: 17px 22px 17px 24px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <img class="avatar" src={profile.avatar} alt={profile.name} onerror="this.style.visibility='hidden'" />
+        <h1>{profile.name}</h1>
+        <p class="tagline">{profile.tagline}</p>
+      </header>
+
+      {categories.map((category) => (
+        <section class="category">
+          <h2 class="category-title">{category.title}</h2>
+          <div class="links">
+            {category.links.map((link) => {
+              const brand = BRANDS[link.brand] ?? BRANDS.default;
+              return (
+                <a
+                  class="link"
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-label={link.label}
+                  style={`--brand:${brand};`}
+                >
+                  <span class="dot" aria-hidden="true"></span>
+                  <span class="link-text">
+                    <span class="link-label">{link.label}</span>
+                    <span class="link-desc">{link.description}</span>
+                  </span>
+                  <span class="arrow" aria-hidden="true">&rarr;</span>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      ))}
+
+      <footer>
+        © {new Date().getFullYear()} {profile.name}
+      </footer>
+    </main>
+
+    {POSTHOG_KEY && (
+      <script is:inline define:vars={{ POSTHOG_KEY }}>
+        !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+        posthog.init(POSTHOG_KEY, { api_host: 'https://us.i.posthog.com' });
+        document.querySelectorAll('.link').forEach(function(el){
+          el.addEventListener('click', function(){
+            posthog.capture('link_click', { label: el.dataset.label, url: el.href });
+          });
+        });
+      </script>
+    )}
+  </body>
+</html>

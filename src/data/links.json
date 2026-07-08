@@ -4,14 +4,46 @@
     "tagline": "Musician · Audio Engineer · Technologist · Educator",
     "avatar": "/avatar.jpg"
   },
-  "links": [
-    { "label": "YouTube",                 "url": "https://youtube.com/@TheSlyProfessor",       "brand": "youtube" },
-    { "label": "SoundCloud",              "url": "https://soundcloud.com/theslyprofessor",     "brand": "soundcloud" },
-    { "label": "Instagram",               "url": "https://instagram.com/theslyprofessor",      "brand": "instagram" },
-    { "label": "A Hundred Ghosts (Bandcamp)", "url": "https://ahundredghosts.bandcamp.com",    "brand": "bandcamp" },
-    { "label": "Southwestern Recording",  "url": "https://southwesternrecording.com",          "brand": "website" },
-    { "label": "Midimaze",                "url": "https://midimaze.com",                       "brand": "website" },
-    { "label": "LinkedIn",                "url": "https://www.linkedin.com/in/theslyprofessor", "brand": "linkedin" },
-    { "label": "nakultiruviluamala.com",  "url": "https://nakultiruviluamala.com",             "brand": "website" }
+  "categories": [
+    {
+      "title": "Music",
+      "links": [
+        { "label": "YouTube", "url": "https://youtube.com/@TheSlyProfessor", "brand": "youtube",
+          "description": "Original music, performances, and course lectures" },
+        { "label": "SoundCloud", "url": "https://soundcloud.com/theslyprofessor", "brand": "soundcloud",
+          "description": "Tracks, sketches, and works in progress" }
+      ]
+    },
+    {
+      "title": "Projects & Platforms",
+      "links": [
+        { "label": "Midimaze", "url": "https://midimaze.com", "brand": "website",
+          "description": "Interactive music-education platform for Recording Arts courses" },
+        { "label": "ConvexCompose", "url": "https://convex.store", "brand": "website",
+          "description": "A module contract for business-domain Convex Components" },
+        { "label": "NNT Docs", "url": "https://nnt-docs.com", "brand": "website",
+          "description": "Documentation for NNT, a music-notation language" }
+      ]
+    },
+    {
+      "title": "Studio & Work",
+      "links": [
+        { "label": "Southwestern Recording", "url": "https://southwesternrecording.com", "brand": "website",
+          "description": "The recording studio at Southwestern College, where I teach" },
+        { "label": "Build Forward Tech", "url": "https://buildforwardtech.com", "brand": "website",
+          "description": "Technology curation, consulting, and sector intelligence" }
+      ]
+    },
+    {
+      "title": "Connect",
+      "links": [
+        { "label": "Instagram", "url": "https://instagram.com/theslyprofessor", "brand": "instagram",
+          "description": "Studio life and what I'm working on" },
+        { "label": "LinkedIn", "url": "https://www.linkedin.com/in/theslyprofessor", "brand": "linkedin",
+          "description": "Professional background and teaching" },
+        { "label": "nakultiruviluamala.com", "url": "https://nakultiruviluamala.com", "brand": "website",
+          "description": "Full bio, composition portfolio, and contact" }
+      ]
+    }
   ]
 }
