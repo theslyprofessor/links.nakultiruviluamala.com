@@ -2,12 +2,12 @@
   "profile": {
     "name": "Nakul Tiruviluamala",
     "tagline": "Musician · Audio Engineer · Technologist · Educator",
-    "note": "Two decades of work, scattered by design — different projects, eras, and distribution deals live on different platforms. These are the main threads; plenty more never made it online.",
     "avatar": "/avatar.jpg"
   },
   "categories": [
     {
       "title": "Music",
+      "note": "Scattered across platforms by era and distribution deal — plenty more never went online.",
       "links": [
         { "label": "YouTube", "url": "https://youtube.com/@TheSlyProfessor", "brand": "youtube",
           "description": "Original music, performances, and course lectures" },

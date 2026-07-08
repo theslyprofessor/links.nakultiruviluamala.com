@@ -30,6 +30,7 @@ const POSTHOG_KEY = import.meta.env.PUBLIC_POSTHOG_KEY ?? 'phc_qgoLdK3kMnSGtzsNa
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, follow" />
     <title>{profile.name} — Links</title>
     <meta name="description" content={`${profile.name} — ${profile.tagline}`} />
 
@@ -126,13 +127,11 @@ const POSTHOG_KEY = import.meta.env.PUBLIC_POSTHOG_KEY ?? 'phc_qgoLdK3kMnSGtzsNa
         letter-spacing: 0.06em;
         text-transform: uppercase;
       }
-      .note {
-        margin: 18px auto 0;
-        max-width: 46ch;
-        font-family: "Fraunces", Georgia, serif;
-        font-style: italic;
-        font-size: 0.98rem;
-        line-height: 1.6;
+      .cat-note {
+        margin: -8px 0 14px;
+        max-width: 52ch;
+        font-size: 0.84rem;
+        line-height: 1.5;
         color: var(--muted);
       }
 
@@ -256,12 +255,12 @@ const POSTHOG_KEY = import.meta.env.PUBLIC_POSTHOG_KEY ?? 'phc_qgoLdK3kMnSGtzsNa
         <img class="avatar" src={profile.avatar} alt={profile.name} onerror="this.style.visibility='hidden'" />
         <h1>{profile.name}</h1>
         <p class="tagline">{profile.tagline}</p>
-        {profile.note && <p class="note">{profile.note}</p>}
       </header>
 
       {categories.map((category) => (
         <section>
           <h2>{category.title}</h2>
+          {category.note && <p class="cat-note">{category.note}</p>}
           <ul>
             {category.links.map((link) => {
               const accent = BRAND_ACCENTS[link.brand] ?? BRAND_ACCENTS.default;
