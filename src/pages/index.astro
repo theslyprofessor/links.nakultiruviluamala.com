@@ -3,23 +3,6 @@ import data from '../data/links.json';
 
 const { profile, categories } = data;
 
-// Brand accent colors — used only for the small tick beside each label.
-const BRAND_ACCENTS = {
-  youtube:    '#ff0000',
-  soundcloud: '#ff5500',
-  instagram:  '#e1306c',
-  spotify:    '#1db954',
-  applemusic: '#fa243c',
-  bandcamp:   '#629aa9',
-  tiktok:     '#010101',
-  twitter:    '#1da1f2',
-  facebook:   '#1877f2',
-  patreon:    '#f96854',
-  linkedin:   '#0a66c2',
-  website:    '#8a8578',
-  default:    '#8a8578',
-};
-
 // PostHog public (phc_) project key — client-safe, visible in page source by design.
 // Override at build with PUBLIC_POSTHOG_KEY; set to '' to disable tracking.
 const POSTHOG_KEY = import.meta.env.PUBLIC_POSTHOG_KEY ?? 'phc_qgoLdK3kMnSGtzsNaoN9NgnRXotfoYjytCjGk3Nd2b3j';
@@ -42,27 +25,21 @@ const POSTHOG_KEY = import.meta.env.PUBLIC_POSTHOG_KEY ?? 'phc_qgoLdK3kMnSGtzsNa
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
 
     <style>
       :root {
-        color-scheme: light dark;
-        --paper: #faf9f6;
-        --ink: #1c1b18;
-        --muted: #6f6b61;
-        --hairline: rgba(28, 27, 24, 0.14);
-        --hover-ink: #000000;
-      }
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --paper: #14130f;
-          --ink: #ece9e2;
-          --muted: #9b968a;
-          --hairline: rgba(236, 233, 226, 0.16);
-          --hover-ink: #ffffff;
-        }
+        color-scheme: dark;
+        --bg: #171310;
+        --bg-lift: #1e1915;
+        --ink: #f0e7d8;
+        --ink-dim: rgba(240, 231, 216, 0.62);
+        --ink-faint: rgba(240, 231, 216, 0.38);
+        --amber: #e8a04c;
+        --amber-glow: rgba(232, 160, 76, 0.35);
+        --hairline: rgba(240, 231, 216, 0.12);
       }
 
       * { box-sizing: border-box; }
@@ -70,200 +47,283 @@ const POSTHOG_KEY = import.meta.env.PUBLIC_POSTHOG_KEY ?? 'phc_qgoLdK3kMnSGtzsNa
       body {
         margin: 0;
         min-height: 100vh;
-        background: var(--paper);
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
         color: var(--ink);
-        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 16px;
-        line-height: 1.55;
+        background:
+          /* faint horizontal panel-line texture */
+          repeating-linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.012) 0px,
+            rgba(255, 255, 255, 0.012) 1px,
+            transparent 1px,
+            transparent 4px
+          ),
+          /* warm VU-backlight pool at the top */
+          radial-gradient(900px 480px at 50% -8%, rgba(232, 160, 76, 0.14), transparent 65%),
+          /* warm brown-to-charcoal room */
+          linear-gradient(180deg, #1c1712 0%, var(--bg) 40%, #131009 100%);
         display: flex;
         justify-content: center;
-        padding: clamp(48px, 9vh, 96px) 24px 96px;
+        padding: 56px 20px 88px;
         -webkit-font-smoothing: antialiased;
       }
 
-      .page {
+      .console {
         width: 100%;
-        max-width: 600px;
+        max-width: 620px;
       }
 
-      /* ---------- masthead ---------- */
+      /* ---------- header ---------- */
       header {
-        margin-bottom: clamp(40px, 8vh, 72px);
+        text-align: center;
+        margin-bottom: 44px;
       }
+
       .avatar {
-        width: 72px;
-        height: 72px;
+        width: 96px;
+        height: 96px;
         border-radius: 50%;
         object-fit: cover;
+        margin: 0 auto 18px;
         display: block;
-        margin-bottom: 24px;
-        filter: grayscale(18%);
-        background: var(--hairline);
+        border: 1px solid rgba(232, 160, 76, 0.5);
+        box-shadow:
+          0 0 0 5px rgba(232, 160, 76, 0.08),
+          0 0 32px var(--amber-glow),
+          0 8px 28px rgba(0, 0, 0, 0.55);
+        background: var(--bg-lift);
       }
+
       h1 {
         font-family: "Fraunces", Georgia, serif;
-        font-weight: 460;
-        font-size: clamp(2rem, 6.5vw, 2.75rem);
-        line-height: 1.08;
-        letter-spacing: -0.015em;
-        margin: 0 0 12px;
+        font-weight: 600;
+        font-size: 1.7rem;
+        letter-spacing: 0.01em;
+        margin: 0 0 10px;
       }
+
       .tagline {
         margin: 0;
-        color: var(--muted);
-        font-size: 0.875rem;
-        letter-spacing: 0.06em;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-      }
-      .cat-note {
-        margin: -12px 0 20px;
-        max-width: 52ch;
-        font-size: 0.85rem;
-        line-height: 1.5;
-        color: var(--muted);
+        color: var(--ink-dim);
       }
 
-      /* ---------- sections ---------- */
-      section {
-        border-top: 1px solid var(--hairline);
-        padding-top: 28px;
-        margin-top: 40px;
-      }
-      section:first-of-type {
-        margin-top: 0;
-      }
-      h2 {
-        font-family: "Fraunces", Georgia, serif;
-        font-style: italic;
-        font-weight: 400;
-        font-size: 1.05rem;
-        letter-spacing: 0.01em;
-        color: var(--muted);
-        margin: 0 0 20px;
-      }
-
-      /* ---------- link list ---------- */
-      ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
+      /* rec-light divider under the header */
+      .rec-strip {
         display: flex;
-        flex-direction: column;
-        gap: 22px;
+        align-items: center;
+        gap: 12px;
+        margin: 26px 0 0;
       }
-      .link {
-        display: block;
-        text-decoration: none;
-        color: inherit;
+      .rec-strip::before,
+      .rec-strip::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--hairline));
       }
-      .link-label {
-        display: inline-flex;
-        align-items: baseline;
-        gap: 10px;
-        font-family: "Fraunces", Georgia, serif;
-        font-weight: 500;
-        font-size: 1.2rem;
-        line-height: 1.25;
-        letter-spacing: -0.005em;
+      .rec-strip::after {
+        background: linear-gradient(90deg, var(--hairline), transparent);
       }
-      .tick {
+      .rec-dot {
         width: 7px;
         height: 7px;
         border-radius: 50%;
-        flex: none;
+        background: var(--amber);
+        box-shadow: 0 0 10px var(--amber-glow), 0 0 3px var(--amber);
+      }
+
+      /* ---------- channel-strip sections ---------- */
+      section {
+        margin-top: 40px;
+      }
+
+      .strip-label {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        margin: 0 0 16px;
+      }
+
+      .strip-label h2 {
+        margin: 0;
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--amber);
+        white-space: nowrap;
+      }
+
+      .strip-label .ch {
+        font-size: 0.62rem;
+        letter-spacing: 0.12em;
+        color: var(--ink-faint);
+        white-space: nowrap;
+      }
+
+      .strip-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        align-self: center;
+        background: linear-gradient(90deg, var(--hairline), transparent);
+      }
+
+      .cat-note {
+        margin: -6px 0 14px;
+        max-width: 52ch;
+        font-size: 0.74rem;
+        line-height: 1.55;
+        color: var(--ink-dim);
+      }
+
+      /* ---------- link rows ---------- */
+      .rows {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .link {
+        position: relative;
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        padding: 15px 18px 17px;
+        border-radius: 10px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0.008));
+        border: 1px solid var(--hairline);
+        overflow: hidden;
+        transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.18s ease;
+      }
+
+      /* fader-style amber underline that rides up on hover */
+      .link::after {
+        content: "";
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 9px;
+        height: 2px;
+        border-radius: 2px;
+        background: linear-gradient(90deg, var(--amber), rgba(232, 160, 76, 0.15));
+        transform: scaleX(0.18);
+        transform-origin: left center;
+        opacity: 0.55;
+        transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+      }
+
+      .link:hover,
+      .link:focus-visible {
+        border-color: rgba(232, 160, 76, 0.45);
         transform: translateY(-1px);
-        opacity: 0.85;
+        outline: none;
       }
-      .link-title {
-        text-decoration: underline;
-        text-decoration-color: transparent;
-        text-decoration-thickness: 1px;
-        text-underline-offset: 5px;
-        transition: text-decoration-color 0.18s ease, color 0.18s ease;
+
+      .link:hover::after,
+      .link:focus-visible::after {
+        transform: scaleX(1);
+        opacity: 1;
+        box-shadow: 0 0 12px var(--amber-glow);
       }
-      .arrow {
-        font-family: "Inter", sans-serif;
-        font-size: 0.85em;
-        color: var(--muted);
+
+      .link:active {
+        transform: translateY(0);
+      }
+
+      .link .row-top {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .link .label {
+        font-family: "Fraunces", Georgia, serif;
+        font-weight: 600;
+        font-size: 1.05rem;
+        letter-spacing: 0.01em;
+      }
+
+      .link .arrow {
+        font-size: 0.78rem;
+        color: var(--ink-faint);
         transition: color 0.18s ease, transform 0.18s ease;
-        display: inline-block;
       }
-      .link-desc {
-        margin: 5px 0 0 17px;
-        color: var(--muted);
-        font-size: 0.9rem;
-        line-height: 1.5;
-        transition: color 0.18s ease;
-      }
-      .link:hover .link-title,
-      .link:focus-visible .link-title {
-        color: var(--hover-ink);
-        text-decoration-color: currentColor;
-      }
+
       .link:hover .arrow,
       .link:focus-visible .arrow {
-        color: var(--hover-ink);
-        transform: translate(2px, -1px);
+        color: var(--amber);
+        transform: translateX(2px);
       }
-      .link:hover .link-desc {
-        color: var(--ink);
-      }
-      .link:focus-visible {
-        outline: 1px solid var(--muted);
-        outline-offset: 6px;
+
+      .link .desc {
+        display: block;
+        margin-top: 5px;
+        font-size: 0.76rem;
+        line-height: 1.5;
+        color: var(--ink-dim);
+        padding-bottom: 8px; /* room for the fader line */
       }
 
       /* ---------- footer ---------- */
       footer {
-        border-top: 1px solid var(--hairline);
         margin-top: 56px;
-        padding-top: 20px;
-        color: var(--muted);
-        font-size: 0.78rem;
-        letter-spacing: 0.04em;
+        text-align: center;
+        font-size: 0.66rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
       }
 
-      @media (max-width: 420px) {
-        body { padding-left: 20px; padding-right: 20px; }
-        .link-desc { margin-left: 0; }
+      @media (min-width: 640px) {
+        body { padding-top: 72px; }
+        h1 { font-size: 1.95rem; }
+        .link { padding: 17px 22px 19px; }
+        .link::after { left: 22px; right: 22px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .link, .link::after, .link .arrow { transition: none; }
       }
     </style>
   </head>
   <body>
-    <main class="page">
+    <main class="console">
       <header>
         <img class="avatar" src={profile.avatar} alt={profile.name} onerror="this.style.visibility='hidden'" />
         <h1>{profile.name}</h1>
         <p class="tagline">{profile.tagline}</p>
+        <div class="rec-strip" aria-hidden="true"><span class="rec-dot"></span></div>
       </header>
 
-      {categories.map((category) => (
+      {categories.map((category, i) => (
         <section>
-          <h2>{category.title}</h2>
+          <div class="strip-label">
+            <span class="ch">CH {String(i + 1).padStart(2, '0')}</span>
+            <h2>{category.title}</h2>
+          </div>
           {category.note && <p class="cat-note">{category.note}</p>}
-          <ul>
-            {category.links.map((link) => {
-              const accent = BRAND_ACCENTS[link.brand] ?? BRAND_ACCENTS.default;
-              return (
-                <li>
-                  <a
-                    class="link"
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-label={link.label}
-                  >
-                    <span class="link-label">
-                      <span class="tick" style={`background:${accent};`}></span>
-                      <span class="link-title">{link.label}</span>
-                      <span class="arrow">&#8599;</span>
-                    </span>
-                    <p class="link-desc">{link.description}</p>
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
+          <div class="rows">
+            {category.links.map((link) => (
+              <a
+                class="link"
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-label={link.label}
+              >
+                <span class="row-top">
+                  <span class="label">{link.label}</span>
+                  <span class="arrow">→</span>
+                </span>
+                <span class="desc">{link.description}</span>
+              </a>
+            ))}
+          </div>
         </section>
       ))}
 
