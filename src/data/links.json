@@ -1,0 +1,17 @@
+{
+  "profile": {
+    "name": "Nakul Tiruviluamala",
+    "tagline": "Musician · Audio Engineer · Technologist · Educator",
+    "avatar": "/avatar.jpg"
+  },
+  "links": [
+    { "label": "YouTube",                 "url": "https://youtube.com/@TheSlyProfessor",       "brand": "youtube" },
+    { "label": "SoundCloud",              "url": "https://soundcloud.com/theslyprofessor",     "brand": "soundcloud" },
+    { "label": "Instagram",               "url": "https://instagram.com/theslyprofessor",      "brand": "instagram" },
+    { "label": "A Hundred Ghosts (Bandcamp)", "url": "https://ahundredghosts.bandcamp.com",    "brand": "bandcamp" },
+    { "label": "Southwestern Recording",  "url": "https://southwesternrecording.com",          "brand": "website" },
+    { "label": "Midimaze",                "url": "https://midimaze.com",                       "brand": "website" },
+    { "label": "LinkedIn",                "url": "https://www.linkedin.com/in/theslyprofessor", "brand": "linkedin" },
+    { "label": "nakultiruviluamala.com",  "url": "https://nakultiruviluamala.com",             "brand": "website" }
+  ]
+}

@@ -1,0 +1,120 @@
+---
+import data from '../data/links.json';
+
+const { profile, links } = data;
+
+// Brand colors — LittleLink-style. Add a platform = add a row here + in links.json.
+const BRANDS: Record<string, { bg: string; fg: string }> = {
+  youtube:    { bg: '#ff0000', fg: '#ffffff' },
+  soundcloud: { bg: '#ff5500', fg: '#ffffff' },
+  instagram:  { bg: '#e1306c', fg: '#ffffff' },
+  spotify:    { bg: '#1db954', fg: '#ffffff' },
+  applemusic: { bg: '#fa243c', fg: '#ffffff' },
+  bandcamp:   { bg: '#629aa9', fg: '#ffffff' },
+  tiktok:     { bg: '#010101', fg: '#ffffff' },
+  twitter:    { bg: '#1da1f2', fg: '#ffffff' },
+  facebook:   { bg: '#1877f2', fg: '#ffffff' },
+  patreon:    { bg: '#f96854', fg: '#ffffff' },
+  linkedin:   { bg: '#0a66c2', fg: '#ffffff' },
+  website:    { bg: '#1f2937', fg: '#ffffff' },
+  default:    { bg: '#1f2937', fg: '#ffffff' },
+};
+
+// PostHog public (phc_) project key — client-safe, visible in page source by design.
+// Override at build with PUBLIC_POSTHOG_KEY; set to '' to disable tracking.
+const POSTHOG_KEY = import.meta.env.PUBLIC_POSTHOG_KEY ?? 'phc_qgoLdK3kMnSGtzsNaoN9NgnRXotfoYjytCjGk3Nd2b3j';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{profile.name} — Links</title>
+    <meta name="description" content={`${profile.name} — ${profile.tagline}`} />
+
+    <!-- Open Graph / social preview -->
+    <meta property="og:title" content={`${profile.name} — Links`} />
+    <meta property="og:description" content={profile.tagline} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://links.nakultiruviluamala.com" />
+
+    <style>
+      :root { color-scheme: light dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: radial-gradient(1200px 600px at 50% -10%, #2a2a3a, #0d0d12);
+        color: #f5f5f7;
+        display: flex;
+        justify-content: center;
+        padding: 56px 20px 80px;
+      }
+      .card { width: 100%; max-width: 560px; text-align: center; }
+      .avatar {
+        width: 104px; height: 104px; border-radius: 50%;
+        object-fit: cover; margin: 0 auto 18px;
+        border: 2px solid rgba(255,255,255,0.18);
+        box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+        background: #2a2a3a;
+      }
+      h1 { font-size: 1.45rem; margin: 0 0 6px; letter-spacing: -0.01em; }
+      .tagline { margin: 0 0 30px; opacity: 0.7; font-size: 0.95rem; }
+      .links { display: flex; flex-direction: column; gap: 14px; }
+      .link {
+        display: flex; align-items: center; justify-content: center;
+        padding: 15px 20px; border-radius: 14px;
+        font-weight: 600; font-size: 1rem; text-decoration: none;
+        transition: transform 0.12s ease, filter 0.12s ease;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+      }
+      .link:hover { transform: translateY(-2px); filter: brightness(1.08); }
+      .link:active { transform: translateY(0); }
+      footer { margin-top: 40px; opacity: 0.4; font-size: 0.78rem; }
+      footer a { color: inherit; }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <img class="avatar" src={profile.avatar} alt={profile.name} onerror="this.style.visibility='hidden'" />
+      <h1>{profile.name}</h1>
+      <p class="tagline">{profile.tagline}</p>
+
+      <div class="links">
+        {links.map((link) => {
+          const c = BRANDS[link.brand] ?? BRANDS.default;
+          return (
+            <a
+              class="link"
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer me"
+              data-label={link.label}
+              style={`background:${c.bg};color:${c.fg};`}
+            >
+              {link.label}
+            </a>
+          );
+        })}
+      </div>
+
+      <footer>
+        © {new Date().getFullYear()} {profile.name}
+      </footer>
+    </main>
+
+    {POSTHOG_KEY && (
+      <script is:inline define:vars={{ POSTHOG_KEY }}>
+        !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+        posthog.init(POSTHOG_KEY, { api_host: 'https://us.i.posthog.com' });
+        document.querySelectorAll('.link').forEach(function(el){
+          el.addEventListener('click', function(){
+            posthog.capture('link_click', { label: el.dataset.label, url: el.href });
+          });
+        });
+      </script>
+    )}
+  </body>
+</html>

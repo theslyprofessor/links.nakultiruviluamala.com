@@ -1,0 +1,18 @@
+services:
+  web:
+    build: .
+    container_name: links-nakul-web
+    restart: unless-stopped
+    labels:
+      # Main router — links.nakultiruviluamala.com
+      - "traefik.enable=true"
+      - "traefik.http.routers.linksnakul.rule=Host(`links.nakultiruviluamala.com`)"
+      - "traefik.http.routers.linksnakul.tls=true"
+      - "traefik.http.routers.linksnakul.tls.certresolver=letsencrypt"
+      - "traefik.http.services.linksnakul.loadbalancer.server.port=80"
+    networks:
+      - dokploy-network
+
+networks:
+  dokploy-network:
+    external: true
