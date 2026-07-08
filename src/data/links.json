@@ -25,7 +25,7 @@
         { "label": "ConvexCompose", "url": "https://convex.store", "brand": "website",
           "description": "A module contract for business-domain Convex Components" },
         { "label": "NNT Docs", "url": "https://nnt-docs.com", "brand": "website",
-          "description": "Documentation for NNT, a music-notation language — Fred Garbutt (avocadojesus) is the technical mastermind" }
+          "description": "Documentation for NNT, a music-notation language — huge thanks to the help of Fred Garbutt (avocadojesus)" }
       ]
     },
     {
