@@ -21,7 +21,7 @@
       "title": "Projects & Platforms",
       "links": [
         { "label": "Midimaze", "url": "https://midimaze.com", "brand": "website",
-          "description": "Interactive music-education platform for Recording Arts courses" },
+          "description": "Interactive music-education platform" },
         { "label": "ConvexCompose", "url": "https://convex.store", "brand": "website",
           "description": "A module contract for business-domain Convex Components" },
         { "label": "NNT Docs", "url": "https://nnt-docs.com", "brand": "website",
