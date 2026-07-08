@@ -126,6 +126,15 @@ const POSTHOG_KEY = import.meta.env.PUBLIC_POSTHOG_KEY ?? 'phc_qgoLdK3kMnSGtzsNa
         letter-spacing: 0.06em;
         text-transform: uppercase;
       }
+      .note {
+        margin: 18px auto 0;
+        max-width: 46ch;
+        font-family: "Fraunces", Georgia, serif;
+        font-style: italic;
+        font-size: 0.98rem;
+        line-height: 1.6;
+        color: var(--muted);
+      }
 
       /* ---------- sections ---------- */
       h2 {
@@ -247,6 +256,7 @@ const POSTHOG_KEY = import.meta.env.PUBLIC_POSTHOG_KEY ?? 'phc_qgoLdK3kMnSGtzsNa
         <img class="avatar" src={profile.avatar} alt={profile.name} onerror="this.style.visibility='hidden'" />
         <h1>{profile.name}</h1>
         <p class="tagline">{profile.tagline}</p>
+        {profile.note && <p class="note">{profile.note}</p>}
       </header>
 
       {categories.map((category) => (

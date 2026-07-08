@@ -2,6 +2,7 @@
   "profile": {
     "name": "Nakul Tiruviluamala",
     "tagline": "Musician · Audio Engineer · Technologist · Educator",
+    "note": "Two decades of work, scattered by design — different projects, eras, and distribution deals live on different platforms. These are the main threads; plenty more never made it online.",
     "avatar": "/avatar.jpg"
   },
   "categories": [
@@ -11,7 +12,9 @@
         { "label": "YouTube", "url": "https://youtube.com/@TheSlyProfessor", "brand": "youtube",
           "description": "Original music, performances, and course lectures" },
         { "label": "SoundCloud", "url": "https://soundcloud.com/theslyprofessor", "brand": "soundcloud",
-          "description": "Tracks, sketches, and works in progress" }
+          "description": "Tracks, sketches, and works in progress" },
+        { "label": "Apple Music", "url": "https://music.apple.com/us/artist/the-sly-professor/1608619209", "brand": "applemusic",
+          "description": "Singles released as The Sly Professor" }
       ]
     },
     {
